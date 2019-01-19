@@ -4,3 +4,4 @@ __pycache__/
 /.idea
 pip-selfcheck.json
 pyvenv.cfg
+.gitattributes
