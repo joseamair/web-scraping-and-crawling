@@ -1,17 +1,18 @@
 import os
 import csv
 from selenium import webdriver
-from helpers.pathfinder import get_parent_dir
+from helpers.pathfinder import get_current_dir
+
 
 # Code to Scrap information from a Web page, and then save it to a CSV file for
-# after processing or later use. Using Gecko driver for Firefox on Windows (Win
-# 10 x64)
+# after processing or later use. Using Chrome driver for Google Chrome on
+# Windows (Win 10 x64)
 
 # Author : Jose Gabriel Kordahi Amair
 # This Code Use the webdriver from selenium Package to open/scrap a desire
 # chunk of information from a Web page.
 # The Web Driver can be downloaed from the oficial web page:
-# https://github.com/mozilla/geckodriver/releases
+# https://sites.google.com/a/chromium.org/chromedriver/downloads
 
 
 # GLOBAL VARIABLES
@@ -22,9 +23,14 @@ MAX_PAGE_DIG = 3
 # URL to scrap information of
 BASE_URL = "http://econpy.pythonanywhere.com/ex/"
 # CSV file file names
-CSV_FILE_NAME = 'results-firefox.csv'
+CSV_FILE_NAME = '\\results-chrome.csv'
+
+# Creates the results folder if it does not exists.
+if not os.path.isdir(os.getcwd() + '\\results'):
+    os.mkdir('results')
+
 # CSV Path to save the file
-CSV_PATH = get_parent_dir(os.getcwd()) + "\\results\\"
+CSV_PATH = get_current_dir() + "\\results"
 
 
 def get_csv_len(file_path, file_name):
@@ -36,16 +42,13 @@ def get_csv_len(file_path, file_name):
     :return: returns the len of the csv file
     """
 
-    print(file_path+file_name)
-
     try:
-        if file_path is None:
-            input_file = open(file_name, "r+")
-        else:
-            input_file = open(file_path + file_name, "r+")
+
+        input_file = open(file_path + file_name, "r+")
 
         reader_file = csv.reader(input_file)
         value = len(list(reader_file))
+
         if value-1 == 0:
             print('Empty CSV File')
         # print('{} Records in the file'.format(value-1))
@@ -79,22 +82,22 @@ def initialize_csv(file_path, file_name):
         print('File Error: ', err)
 
 
-def open_firefox_webdriver():
+def open_chrome_webdriver():
 
     """
     This Function Instantiates a new web driver
-    :return: A firefox web Driver isntance or error
+    :return: A chrome web Driver isntance or error
     """
 
     try:
         print('Initializing web driver')
-        return webdriver.Firefox()
+        return webdriver.Chrome()
     except Exception as err:
         print('Error Opening the Driver: ', err)
         return None
 
 
-def close_firefox_webdriver(driver):
+def close_chrome_webdriver(driver):
 
     """
     Close an instantiated webdriver
@@ -207,7 +210,7 @@ def scrap_single_url(url, driver, *conditions):
     """
     Function to Scrap a single URL and retrive its desired values
     :param url: URL to Scrap
-    :param driver: Instance of Web Driver (firefox Web driver)
+    :param driver: Instance of Web Driver (chrome Web driver)
     :return: two lists of buyers and prices if both list hava the same lenghts
     """
 
@@ -285,9 +288,9 @@ def multi_scrap(link_list, driver):
 # Main Program
 if __name__ == '__main__':
 
-    driver = open_firefox_webdriver()
+    driver = open_chrome_webdriver()
     initialize_csv(CSV_PATH, CSV_FILE_NAME)
     link_list = multi_url_build(BASE_URL, MAX_PAGE_NUM, MAX_PAGE_DIG)
     buyers, prices = multi_scrap(link_list, driver)
     save_to_csv(CSV_PATH, CSV_FILE_NAME, buyers, prices)
-    close_firefox_webdriver(driver)
+    close_chrome_webdriver(driver)

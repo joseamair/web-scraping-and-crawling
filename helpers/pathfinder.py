@@ -1,11 +1,21 @@
 import os
 
+
 def get_parent_dir(directory):
 
     """
-    Gets the base directory of curreny running file/script
+    Gets the parent directory of curreny running file/script
     :param directory: Current directory os.getcwd()
-    :return: returns the path of the current directory
+    :return: returns the parent path of the current directory
     """
 
     return os.path.dirname(directory)
+
+
+def get_current_dir():
+
+    """
+    Returns the Current Working directory where the Script is called
+    :return: returns the path of the current working directory
+    """
+    return os.getcwd()
